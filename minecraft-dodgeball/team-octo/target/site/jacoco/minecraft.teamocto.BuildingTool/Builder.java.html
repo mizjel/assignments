@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Builder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.template</a> &gt; <a href="index.source.html" class="el_package">minecraft.teamocto.buildingtool</a> &gt; <span class="el_source">Builder.java</span></div><h1>Builder.java</h1><pre class="source lang-java linenums">package minecraft.teamocto.buildingtool;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import minecraft.teamocto.DefensePlugin;
+
+public abstract class Builder implements Listener {
+
+    private final DefensePlugin plugin;
+
+    //Store the item type used for this type of building tool
+    private Material material;
+
+<span class="nc" id="L18">    protected Builder(DefensePlugin plugin, Material material) {</span>
+<span class="nc" id="L19">        this.plugin = plugin;    </span>
+<span class="nc" id="L20">        this.material = material;</span>
+<span class="nc" id="L21">    }</span>
+    public abstract void build();
+
+    //Define an event handler for the player interact event
+    //This is an event that fires whenever a player interacts with an object or air
+    @EventHandler
+    public void onRightClick(PlayerInteractEvent event) {
+<span class="nc" id="L28">        Player player = event.getPlayer();</span>
+
+        //Check if the player did a right click with the stone pickaxe in it's main hand
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if(player.getInventory().getItemInMainHand().getType() == material){</span>
+            //Check if player clicked the air
+            //Check if player clicked in bounds of own playing field
+            //Build a wall, delegate build logic to the specific builder class
+<span class="nc" id="L35">            this.build();</span>
+        }
+<span class="nc" id="L37">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

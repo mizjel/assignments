@@ -1,0 +1,7 @@
+nl\sogyo\mancala\api\models\MancalaDto.class
+nl\sogyo\mancala\api\MancalaGame.class
+nl\sogyo\mancala\api\models\PlayerInput.class
+nl\sogyo\mancala\api\models\PitDto.class
+nl\sogyo\mancala\api\MancalaInitialize.class
+nl\sogyo\mancala\api\models\GameStatusDto.class
+nl\sogyo\mancala\api\models\PlayerDto.class

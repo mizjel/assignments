@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pit.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Mancala</a> &gt; <a href="index.source.html" class="el_package">nl.sogyo.mancala.domain</a> &gt; <span class="el_source">Pit.java</span></div><h1>Pit.java</h1><pre class="source lang-java linenums">package nl.sogyo.mancala.domain;
+
+public class Pit extends Bowl{
+    public Pit() {
+<span class="fc" id="L5">        super();</span>
+<span class="fc" id="L6">    }</span>
+    public Pit(Player player) {
+<span class="fc" id="L8">        super(player);</span>
+<span class="fc" id="L9">    }</span>
+    public Pit(Player player, int i) {
+<span class="fc" id="L11">        super(player, i, 4);</span>
+<span class="fc" id="L12">    }</span>
+    public Pit(Player playerOne, Player playerTwo) {
+<span class="fc" id="L14">        super(playerOne, playerTwo);</span>
+<span class="fc" id="L15">    }</span>
+    @Override
+    public Object divideStones(Player player) throws InvalidMoveException {
+        //If a player does not own this bowl return an exception(not allowed to start in opponent bowl)
+<span class="fc bfc" id="L19" title="All 2 branches covered.">        if(!player.isOwner(this)) throw new InvalidMoveException(&quot;Cannot start in opponent pit&quot;);</span>
+        // The game ends if all bowls of the turn player are empty
+
+        //First bowl, get all the stones from this bowl
+<span class="fc" id="L23">        int amount = this.getStones();</span>
+        //Set the amount of stones to 0 for this bowl
+<span class="fc" id="L25">        this.removeStones(amount);</span>
+        //and call the overloaded method with the amount, returns the last bowl used
+        //and switches the player turn if end turn conditions have been reached
+<span class="fc" id="L28">        return this.getNextBowl().divideStones(amount, player);</span>
+    }
+    @Override
+    protected Object divideStones(int amount, Player player) {
+        //Will be called for all bowls after the first bowl
+        //add one stone to this bowl and call own method again with amount -1
+        
+<span class="fc" id="L35">        this.addStones(1);</span>
+        //If amount is 1 return the method, this means that the move has run out of stones
+        //Returns the last bowl that was included in the move
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if(amount == 1) {</span>
+            //If the last bead ends in an empty pit on the own side
+<span class="fc bfc" id="L40" title="All 4 branches covered.">            if(player.isOwner(this) &amp;&amp; this.getStones() == 1){</span>
+                //the player can take the bead(1) from that pit and the direct opposite's beads
+                //and put them in their kalaha
+<span class="fc" id="L43">                this.getOwnerKalaha(player).addStones(this.getStones() + this.getOppositeBowl().getStones());</span>
+<span class="fc" id="L44">                this.removeStones(this.getStones());</span>
+<span class="fc" id="L45">                this.getOppositeBowl().removeStones(this.getOppositeBowl().getStones());</span>
+            }
+<span class="fc" id="L47">            player.switchPlayer();</span>
+<span class="fc" id="L48">            return this;</span>
+        }
+<span class="fc" id="L50">        return this.getNextBowl().divideStones(amount -1, player);</span>
+    }
+    
+    @Override
+    public Boolean isKalaha() {
+<span class="fc" id="L55">        return false;</span>
+    }
+    @Override
+    public Kalaha getOwnerKalaha(Player player) {
+<span class="fc" id="L59">        return this.getNextBowl().getOwnerKalaha(player);</span>
+    }
+    @Override
+    public Boolean pitsAreEmptyForOwner(Player player, Bowl startingBowl) {
+        //Check if pit is same as starting pit
+        //Check if pit has player as owner
+        //Check if pit has 0 stones, if not all pits are not empty so return false
+<span class="fc bfc" id="L66" title="All 4 branches covered.">        if(this.getOwner().equals(player) &amp;&amp; this.getStones() != 0) </span>
+<span class="fc" id="L67">            return false;</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        else if(this.equals(startingBowl)) </span>
+<span class="fc" id="L69">            return true;</span>
+<span class="fc" id="L70">        else return this.getNextBowl().pitsAreEmptyForOwner(player, startingBowl);</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

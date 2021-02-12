@@ -1,0 +1,98 @@
+#image: maven:latest
+image: maven:3.6.3-openjdk-16
+
+include:
+  # - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+
+stages:
+  - tag_commit
+  - build
+  - test
+  - dind_build
+  - deploy_test
+variables:
+  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
+cache:
+  paths:
+    - target/
+    - .m2/repository
+
+sast:
+  artifacts:
+    paths: [gl-sast-report.json]
+
+version_tag:
+  stage: tag_commit
+  except:
+    - tags
+
+  script:
+    - latestVersion=$(git describe --always --match V0.1.0 | tee target/currentVersion.txt)
+    # - mvn versions:set -DnewVersion=$latestVersion
+    - git remote remove origin
+    - git remote add origin https://oauth2:$CI_USER_ACCESS_TOKEN@git.sogyo.nl/mvdhoorn/mancala-java.git
+    - git config --global user.email "mvdhoorn@sogyo.nl"
+    - git config --global user.name "Michel van der Hoorn"
+    - git tag -a $latestVersion -m 'New Version'
+    - git push origin $latestVersion
+  
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - target/
+
+  dependencies: []
+  only:
+    - master
+
+build:
+  stage: build
+  script:
+    - mvn $MAVEN_OPTS package
+  artifacts:
+    paths:
+     - target/mancala-1.0-SNAPSHOT.jar
+    expire_in: 1 week
+
+test:
+  stage: test
+  script:
+    - mvn $MAVEN_OPTS test
+    - cat target/site/jacoco/index.html
+    # - 'python /opt/cover2cover.py target/site/jacoco/jacoco.xml src/main/java > target/site/cobertura.xml'
+    # - 'python /opt/source2filename.py target/site/cobertura.xml'
+  artifacts:
+    # paths:
+    #   - target/site/jacoco/jacoco.xml
+    reports:
+      junit: target/surefire-reports/TEST-*.xml
+    expire_in: 1 week
+      # cobertura: target/site/cobertura.xml
+
+dind_build:
+  image: docker:20.10.1
+  stage: dind_build
+  #Dockerfile should be in the repo so just build the image
+  script:
+    - latestVersion=$(cat target/currentVersion.txt)
+    - echo "$DOCKER_ACCESS_TOKEN" | docker login docker.io -u michelvdhoorn --password-stdin
+    - docker build -t michelvdhoorn/mancala-java:$latestVersion .
+    - docker push michelvdhoorn/mancala-java:$latestVersion
+  dependencies: []
+  only:
+    - master
+
+# deploy:
+#   stage: deploy_test
+#   script:
+#     - echo 'Deploying to test!'
+#     - echo 'Environment name "$CI_ENVIRONMENT_NAME"'
+#     - echo 'Environment url "$CI_ENVIRONMENT_URL"'
+#   # An environment can be made in gitlab by going to the repository page -> Operations menu tab -> Environments
+#   environment:
+#     name: Test/$CI_COMMIT_REF_NAME
+#   dependencies: []
+  # only:
+  #   - tags

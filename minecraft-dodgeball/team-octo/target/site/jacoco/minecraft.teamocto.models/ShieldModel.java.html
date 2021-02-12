@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ShieldModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.team-octo</a> &gt; <a href="index.source.html" class="el_package">minecraft.teamocto.models</a> &gt; <span class="el_source">ShieldModel.java</span></div><h1>ShieldModel.java</h1><pre class="source lang-java linenums">package minecraft.teamocto.models;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+
+public class ShieldModel {
+    private Player owner;
+    private List&lt;Location&gt; locations;
+
+<span class="fc" id="L16">    public ShieldModel(Player player) {</span>
+<span class="fc" id="L17">        owner = player;</span>
+<span class="fc" id="L18">        locations = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L19">    }</span>
+<span class="nc" id="L20">    public ShieldModel(Player player, List&lt;Location&gt; list) {</span>
+<span class="nc" id="L21">        owner = player;</span>
+<span class="nc" id="L22">        locations = list;</span>
+<span class="nc" id="L23">    }</span>
+    public void addBlockLocation(Location location){
+<span class="fc" id="L25">        locations.add(location);</span>
+<span class="fc" id="L26">    }</span>
+    public Player getOwner(){
+<span class="nc" id="L28">        return this.owner;</span>
+    }
+    public List&lt;Location&gt; getBlockLocations(){
+<span class="nc" id="L31">        return this.locations;</span>
+    }
+    public Boolean hasLocation(Location location){
+<span class="nc bnc" id="L34" title="All 6 branches missed.">        Location foundLocation = locations.stream().filter(l -&gt; l.getX() == location.getX() &amp;&amp; l.getY() == location.getY() &amp;&amp; l.getZ() == location.getZ()).findAny().orElse(null);</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        return (foundLocation != null) ? true : false;</span>
+    }
+    public void breakShield(){
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        for(Location location : locations){</span>
+<span class="nc" id="L39">            Block block = location.getBlock();</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            if(block.getType() == Material.GLASS_PANE) block.setType(Material.AIR);</span>
+        }
+<span class="nc" id="L42">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

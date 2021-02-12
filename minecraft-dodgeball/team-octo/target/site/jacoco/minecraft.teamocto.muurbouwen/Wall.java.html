@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Wall.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.team-octo</a> &gt; <a href="index.source.html" class="el_package">minecraft.teamocto.muurbouwen</a> &gt; <span class="el_source">Wall.java</span></div><h1>Wall.java</h1><pre class="source lang-java linenums">package minecraft.teamocto.muurbouwen;
+
+import java.util.Set;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+public class Wall{
+	
+	// Empty constructor, for what? i dunno
+	public Wall() {
+<span class="fc" id="L17">		super();</span>
+<span class="fc" id="L18">	}</span>
+	
+	public void BuildWall(PlayerInteractEvent event) {
+		// get the player from the event
+<span class="nc" id="L22">		Player player = event.getPlayer();</span>
+		
+		// can not place a wall in the air
+<span class="nc bnc" id="L25" title="All 2 branches missed.">		if(!(player.getTargetBlock((Set&lt;Material&gt;) null, 2).getType() == Material.AIR)) {</span>
+			
+<span class="nc bnc" id="L27" title="All 2 branches missed.">			if (player.getInventory().contains(Material.IRON_BLOCK, 9)) {</span>
+				// get the location of the player
+<span class="nc" id="L29">				Location blockLoc = player.getTargetBlock((Set&lt;Material&gt;) null, 4).getLocation();</span>
+				// get the direction of the player (NORTH,EAST,SOUTH or WEST
+<span class="nc" id="L31">				String directionPlayer = getDirection(player);</span>
+				
+				// set 9 blocks in front of the player 
+<span class="nc" id="L34">				CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L35">	    		CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L36">				CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+				
+<span class="nc" id="L38">				CreateBlockForWall(blockLoc,1,-2,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L39">	    		CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L40">				CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+					
+<span class="nc" id="L42">				CreateBlockForWall(blockLoc,1,-2,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L43">	    		CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L44">				CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L45">				removeItems(player.getInventory(),Material.IRON_BLOCK,9);</span>
+<span class="nc" id="L46">			}</span>
+			else {
+<span class="nc" id="L48">				player.sendMessage(&quot;Not enough iron blocks to build a wall, 9 are needed!&quot;);</span>
+			}
+		}
+<span class="nc" id="L51">	}</span>
+	public static void removeItems(Inventory inventory, Material type, int amount) {
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (amount &lt;= 0) return;</span>
+<span class="fc" id="L54">        int size = inventory.getSize();</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        for (int slot = 0; slot &lt; size; slot++) {</span>
+<span class="fc" id="L56">            ItemStack is = inventory.getItem(slot);</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">            if (is == null) continue;</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">            if (type == is.getType()) {</span>
+<span class="fc" id="L59">                int newAmount = is.getAmount() - amount;</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">                if (newAmount &gt; 0) {</span>
+<span class="nc" id="L61">                    is.setAmount(newAmount);</span>
+<span class="nc" id="L62">                    break;</span>
+                } else {
+<span class="fc" id="L64">                    inventory.clear(slot);</span>
+<span class="fc" id="L65">                    amount = -newAmount;</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">                    if (amount == 0) break;</span>
+                }
+            }
+        }
+<span class="fc" id="L70">    }</span>
+		
+	public static void CreateBlockForWall(Location loc, int x, int y, Material mat,String direction) {
+		// check with direction the player is facing
+<span class="nc bnc" id="L74" title="All 4 branches missed.">		if (direction == &quot;NORTH&quot; || direction == &quot;SOUTH&quot;) {</span>
+			// get the direction of the new block
+<span class="nc" id="L76">			loc.setY(loc.getY() + y);</span>
+<span class="nc" id="L77">			loc.setX(loc.getX() + x);</span>
+<span class="nc" id="L78">			Block block = loc.getBlock();</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">			if (block.getType() == Material.AIR) {</span>
+				// if the block is air (can't replace exiting blocks)
+<span class="nc" id="L81">				block.setType(mat);</span>
+			}
+		}
+<span class="nc bnc" id="L84" title="All 4 branches missed.">		if (direction == &quot;WEST&quot; || direction == &quot;EAST&quot;) {</span>
+			// get the direction of the new block
+<span class="nc" id="L86">			loc.setY(loc.getY() + y);</span>
+<span class="nc" id="L87">			loc.setZ(loc.getZ() + x);</span>
+<span class="nc" id="L88">			Block block = loc.getBlock();</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">			if (block.getType() == Material.AIR) {</span>
+				// if the block is air (can't replace exiting blocks)
+<span class="nc" id="L91">				block.setType(mat);</span>
+			}
+		}
+<span class="nc" id="L94">	}</span>
+	
+	public static String getDirection(Player player) {
+		// get the yaw of the player
+<span class="nc" id="L98">		float yaw = player.getLocation().getYaw();</span>
+		// check if the yaw is lower than 0
+<span class="nc bnc" id="L100" title="All 2 branches missed.">		if (yaw &lt; 0){</span>
+<span class="nc" id="L101">			yaw += 360;</span>
+		}
+		// translate the yaw to SOUTH, WEST,NORTH or EAST 
+<span class="nc bnc" id="L104" title="All 4 branches missed.">		  if (yaw &gt;= 315 || yaw &lt; 45) {</span>
+<span class="nc" id="L105">		        return &quot;SOUTH&quot;;</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">		    } else if (yaw &lt; 135) {</span>
+<span class="nc" id="L107">		        return &quot;WEST&quot;;</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">		    } else if (yaw &lt; 225) {</span>
+<span class="nc" id="L109">		        return &quot;NORTH&quot;;</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">		    } else if (yaw &lt; 315) {</span>
+<span class="nc" id="L111">		        return &quot;EAST&quot;;</span>
+		    }
+<span class="nc" id="L113">		    return &quot;NORTH&quot;;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

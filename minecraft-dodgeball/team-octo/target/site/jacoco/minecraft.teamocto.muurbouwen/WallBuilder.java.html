@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WallBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.template</a> &gt; <a href="index.source.html" class="el_package">minecraft.teamocto.muurbouwen</a> &gt; <span class="el_source">WallBuilder.java</span></div><h1>WallBuilder.java</h1><pre class="source lang-java linenums">package minecraft.teamocto.muurbouwen;
+
+import java.util.Set;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class WallBuilder{
+	
+	PlayerInteractEvent currentEvent;
+	
+<span class="nc" id="L17">	public WallBuilder(PlayerInteractEvent event) {</span>
+<span class="nc" id="L18">		this.currentEvent = event;</span>
+<span class="nc" id="L19">		BuildWall(this.currentEvent);</span>
+<span class="nc" id="L20">	}</span>
+	
+	public static void BuildWall(PlayerInteractEvent event) {
+		// get the player from the event
+<span class="nc" id="L24">		Player player = event.getPlayer();</span>
+		
+		// can not place a wall in the air
+<span class="nc bnc" id="L27" title="All 2 branches missed.">		if(!(player.getTargetBlock((Set&lt;Material&gt;) null, 2).getType() == Material.AIR)) {</span>
+			
+			// get the location of the player
+<span class="nc" id="L30">			Location blockLoc = player.getTargetBlock((Set&lt;Material&gt;) null, 4).getLocation();</span>
+			// get the direction of the player (NORTH,EAST,SOUTH or WEST
+<span class="nc" id="L32">			String directionPlayer = getDirection(player);</span>
+			
+			// set 9 blocks in front of the player 
+<span class="nc" id="L35">			CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L36">    		CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L37">			CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+			
+<span class="nc" id="L39">			CreateBlockForWall(blockLoc,1,-2,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L40">    		CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L41">			CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+				
+<span class="nc" id="L43">			CreateBlockForWall(blockLoc,1,-2,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L44">    		CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+<span class="nc" id="L45">			CreateBlockForWall(blockLoc,0,1,Material.IRON_BLOCK,directionPlayer);</span>
+			}
+<span class="nc" id="L47">	}</span>
+		
+	public static void CreateBlockForWall(Location loc, int x, int y, Material mat,String direction) {
+		// check with direction the player is facing
+<span class="nc bnc" id="L51" title="All 6 branches missed.">		if (direction == &quot;NORTH&quot; | direction == &quot;SOUTH&quot;) {</span>
+			// get the direction of the new block
+<span class="nc" id="L53">			loc.setY(loc.getY() + y);</span>
+<span class="nc" id="L54">			loc.setX(loc.getX() + x);</span>
+<span class="nc" id="L55">			Block block = loc.getBlock();</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">			if (block.getType() == Material.AIR) {</span>
+				// if the block is air (can't replace exiting blocks)
+<span class="nc" id="L58">				block.setType(mat);</span>
+			}
+		}
+<span class="nc bnc" id="L61" title="All 6 branches missed.">		if (direction == &quot;WEST&quot; | direction == &quot;EAST&quot;) {</span>
+			// get the direction of the new block
+<span class="nc" id="L63">			loc.setY(loc.getY() + y);</span>
+<span class="nc" id="L64">			loc.setZ(loc.getZ() + x);</span>
+<span class="nc" id="L65">			Block block = loc.getBlock();</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">			if (block.getType() == Material.AIR) {</span>
+				// if the block is air (can't replace exiting blocks)
+<span class="nc" id="L68">				block.setType(mat);</span>
+			}
+		}
+<span class="nc" id="L71">	}</span>
+	
+	public static String getDirection(Player player) {
+		// get the yaw of the player
+<span class="nc" id="L75">		float yaw = player.getLocation().getYaw();</span>
+		// check if the yaw is lower than 0
+<span class="nc bnc" id="L77" title="All 2 branches missed.">		if (yaw &lt; 0){</span>
+<span class="nc" id="L78">			yaw += 360;</span>
+		}
+		// translate the yaw to SOUTH, WEST,NORTH or EAST 
+<span class="nc bnc" id="L81" title="All 4 branches missed.">		  if (yaw &gt;= 315 || yaw &lt; 45) {</span>
+<span class="nc" id="L82">		        return &quot;SOUTH&quot;;</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">		    } else if (yaw &lt; 135) {</span>
+<span class="nc" id="L84">		        return &quot;WEST&quot;;</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">		    } else if (yaw &lt; 225) {</span>
+<span class="nc" id="L86">		        return &quot;NORTH&quot;;</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">		    } else if (yaw &lt; 315) {</span>
+<span class="nc" id="L88">		        return &quot;EAST&quot;;</span>
+		    }
+<span class="nc" id="L90">		    return &quot;NORTH&quot;;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

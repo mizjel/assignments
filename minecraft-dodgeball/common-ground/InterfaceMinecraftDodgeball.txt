@@ -1,0 +1,56 @@
+INTERFACE:
+
+Op basis van de opbouw:
+	-createPlayingField 
+		--> determines the position and size of the playing field, 
+			divided into two sides that each belong to a team
+			--> think about making pre-fab arena? 
+	-assignPlayerToTeam
+		--> makes sure every player is assigned to a team
+	-teleportTrespasser
+		--> teleports any player who goes beyond the bounds of their 
+			own side of the field, whether to the opposite's side or 
+			off to the sides
+	-spawnResources
+		--> (re)spawns the resources needed for attack and defense
+			--> possibly built-in randomness with a 80/20 chance of 
+				getting a base-level resource versus a premium resource
+	
+Op basis van de Squid Squad opdrachten:
+	-throwMissile
+		--> a way to attack a target or player, for example by 
+			throwing a block of dynamite or exploding arrow
+	-simulateWindSpeed
+		--> relevant for throwing the missiles
+	-spawnMonster
+		--> (optionally?) spawns a creeper or other monster when a 
+			defensive shield is built
+			--> can damage defensive structures but not the target,
+				spawns on the opponent's side of field and can't 
+				leave it (subject to teleportTrespasser)
+	-explodeMonster
+		--> makes the monster explode (implicit in creepers?) 
+			
+	
+Op basis van de Team Octo opdrachten:	
+	-createTarget
+		--> towers or cubes made out of destructible blocks (walls can
+			be built with resources available at the start of the game)
+	-spawnShield
+		--> makes a temporary shield that can be damaged by monsters 
+			and missiles
+	-destroyShield
+		--> shatters the shield when a block is destroyed
+	-createAntiAircraft
+		--> creates turret or the like that can destroy incoming
+			missiles automatically once loaded
+	-loadAntiAircraft
+		--> gives the turret a number of 'bullets' with which to destroy
+			incoming missiles
+	
+Voor allebei nodig:
+	-consumeResource
+		--> makes sure enough resources are available for the action 
+			being undertaken, destroys them/uses them up
+			--> place a crafting table somewhere for higher level 
+				offense/defense?

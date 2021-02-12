@@ -1,0 +1,13 @@
+name: TemplatePlugin
+version: 1.0-SNAPSHOT
+author: Common Ground
+main: minecraft.arena.MyPlugin
+api-version: 1.16
+commands:
+   placearena:
+      description: places an arena
+      usage: /placearena width depth height
+   joinarena:
+      description: joins the latest arena that is build
+      usage: /joinarena teamID(1 or 2)
+

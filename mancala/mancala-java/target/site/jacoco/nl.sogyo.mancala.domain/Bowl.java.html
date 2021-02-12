@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Bowl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Mancala</a> &gt; <a href="index.source.html" class="el_package">nl.sogyo.mancala.domain</a> &gt; <span class="el_source">Bowl.java</span></div><h1>Bowl.java</h1><pre class="source lang-java linenums">package nl.sogyo.mancala.domain;
+
+public abstract class Bowl implements SwitchPlayerEventListener  {
+    private int stones;
+    private int index;
+
+    private Player owner;
+    private Bowl nextBowl;
+
+    public Bowl() {
+<span class="fc" id="L11">        this(new Player());</span>
+<span class="fc" id="L12">    }</span>
+    public Bowl(Player player) {
+<span class="fc" id="L14">        this(player, 0);</span>
+<span class="fc" id="L15">        this.createBowls(6);</span>
+<span class="fc" id="L16">    }</span>
+    public Bowl(Player player, int i) {
+<span class="fc" id="L18">        this(player, i, 4);</span>
+<span class="fc" id="L19">    }</span>
+<span class="fc" id="L20">    public Bowl(Player player, int i, int amountOfStones) {</span>
+<span class="fc" id="L21">        this.owner = player;</span>
+<span class="fc" id="L22">        this.index = i;</span>
+<span class="fc" id="L23">        this.stones = amountOfStones;</span>
+<span class="fc" id="L24">    }</span>
+    public Bowl(Player playerOne, Player playerTwo) {
+<span class="fc" id="L26">        this(playerOne, 0);</span>
+<span class="fc" id="L27">        playerOne.setSwitchPlayerEventListener(this);</span>
+<span class="fc" id="L28">        playerTwo.setSwitchPlayerEventListener(this);</span>
+<span class="fc" id="L29">        this.createBowls(playerOne, playerTwo, 6);</span>
+<span class="fc" id="L30">    }</span>
+
+    public abstract Kalaha getOwnerKalaha(Player player);
+    public abstract Boolean pitsAreEmptyForOwner(Player player, Bowl startingBowl);
+    public abstract Boolean isKalaha();
+    protected abstract Object divideStones(int amount, Player player);
+    public abstract Object divideStones(Player player) throws InvalidMoveException;
+
+    private void createBowls(Player playerOne, Player playerTwo, int amount) {
+<span class="fc" id="L39">        this.createBowls(0, amount, playerOne);</span>
+<span class="fc" id="L40">        this.getOwnerKalaha(playerOne).setNextBowl(new Pit(playerTwo));</span>
+<span class="fc" id="L41">        this.getOwnerKalaha(playerTwo).setNextBowl(this);</span>
+<span class="fc" id="L42">    }</span>
+    private void createBowls(int amount) {
+<span class="fc" id="L44">        this.createBowls(0, amount, this.getOwner());</span>
+<span class="fc" id="L45">    }</span>
+    private Object createBowls(int i, int amount, Player player) {
+<span class="fc" id="L47">        int newIndex = i + 1;</span>
+        
+        //Create a pit as next and recurse into that pit
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if(i != (amount - 1)){</span>
+<span class="fc" id="L51">            this.setNextBowl(new Pit(player, newIndex));</span>
+<span class="fc" id="L52">            return this.getNextBowl().createBowls(newIndex, amount, player);</span>
+        }
+        //Create a kalaha and escape the function
+        else {
+<span class="fc" id="L56">            this.setNextBowl(new Kalaha(player, newIndex));</span>
+<span class="fc" id="L57">            return this.getNextBowl();</span>
+        }
+    }
+    public int getIndex(){
+<span class="fc" id="L61">        return this.index;</span>
+    }
+    public int getStones(){
+<span class="fc" id="L64">        return this.stones;</span>
+    }
+    public void setStones(int amount){
+<span class="fc" id="L67">        this.stones = amount;</span>
+<span class="fc" id="L68">    }</span>
+    public void addStones(int amount){
+<span class="fc" id="L70">        this.stones += amount;</span>
+<span class="fc" id="L71">    }</span>
+    public void removeStones(int amount){
+<span class="fc" id="L73">        this.stones -= amount;</span>
+<span class="fc" id="L74">    }</span>
+    public Boolean pitsAreEmptyForOwner(Player player) {
+<span class="fc" id="L76">        return this.getNextBowl().pitsAreEmptyForOwner(player, this);</span>
+    }
+    public Bowl getOppositeBowl(){
+        //Get opposite of THIS bowl
+<span class="fc" id="L80">        return this.getBowlForOwner(5 - this.getIndex(), getOwner().getOpponent());</span>
+    }
+    public Bowl getBowlForOwner(int i, Player owns){
+<span class="fc bfc" id="L83" title="All 4 branches covered.">        if(this.getIndex() == i &amp;&amp; owns.isOwner(this)) return this;</span>
+<span class="fc" id="L84">        else return this.getNextBowl().getBowlForOwner(i, owns);</span>
+    }
+    public Integer getAmountOfStonesFromPlayerBowls(Player player) {
+<span class="fc" id="L87">		return this.getNextBowl().getAmountOfStonesFromPlayerBowls(player, 0, this);</span>
+    }
+    public Integer getAmountOfStonesFromPlayerBowls(Player player, int amount, Bowl startingBowl){
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if(this.getOwner().equals(player)){</span>
+<span class="fc" id="L91">            amount = amount + this.getStones();</span>
+        }
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if(this.equals(startingBowl)) return amount;</span>
+<span class="fc" id="L94">        return this.getNextBowl().getAmountOfStonesFromPlayerBowls(player, amount, startingBowl);</span>
+    }
+    public Bowl getNextBowl(){
+<span class="fc" id="L97">        return this.nextBowl;</span>
+    }
+    public void setNextBowl(Bowl bowl){
+<span class="fc" id="L100">        this.nextBowl = bowl;</span>
+<span class="fc" id="L101">    }</span>
+    public Player getOwner(){
+<span class="fc" id="L103">        return this.owner;</span>
+    }
+    @Override
+    public void onSwitchPlayer(Player player) {
+        //This event will fire when a player has been switched with the turn player as parameter
+        //Check if all pits for this player are empty
+        //Change gamestate if they are
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if(this.pitsAreEmptyForOwner(player)) {</span>
+<span class="fc" id="L111">            Player.setGameStateForPlayers(player, player.getOpponent(), GameState.GAMEOVER);</span>
+            //Get all beads from both players
+<span class="fc" id="L113">            int stonesPlayer = this.getAmountOfStonesFromPlayerBowls(player);</span>
+<span class="fc" id="L114">            int stonesOpponent = this.getAmountOfStonesFromPlayerBowls(player.getOpponent());</span>
+            //The player with most beads wins
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">            if(stonesPlayer &gt; stonesOpponent) Player.setWinner(player, player.getOpponent(), player);</span>
+<span class="fc" id="L117">            else Player.setWinner(player, player.getOpponent(), player.getOpponent());</span>
+        }
+        
+<span class="fc" id="L120">    }</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

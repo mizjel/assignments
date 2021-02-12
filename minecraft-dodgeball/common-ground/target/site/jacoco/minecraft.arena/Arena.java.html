@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Arena.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.arena</a> &gt; <a href="index.source.html" class="el_package">minecraft.arena</a> &gt; <span class="el_source">Arena.java</span></div><h1>Arena.java</h1><pre class="source lang-java linenums">package minecraft.arena;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
+
+
+public class Arena {
+    // corrected convention : x depth, z width, y height.
+    private Location location;
+    private final int width;
+    private final int depth;
+    private final int height;
+    private final World thisWorld;
+
+    private ArrayList&lt;Location&gt; spawnsTeamOne; // list of locations to use for teleports and respawn
+    private ArrayList&lt;Location&gt; spawnsTeamTwo;
+
+    private HashSet&lt;Player&gt; teamOne;
+    private HashSet&lt;Player&gt; teamTwo;
+
+    private final Target[] targets;
+
+<span class="fc" id="L30">    private ResourceChest[] resources = new ResourceChest[2];</span>
+    private Location loc1;
+    private Location loc2;
+
+<span class="fc" id="L34">    public Arena(Location location, int width, int depth, int height) {</span>
+<span class="fc" id="L35">        this.location = location;</span>
+<span class="fc" id="L36">        this.thisWorld = location.getWorld();</span>
+<span class="fc" id="L37">        this.width = width;</span>
+<span class="fc" id="L38">        this.depth = depth;</span>
+<span class="fc" id="L39">        this.height = height;</span>
+<span class="fc" id="L40">        this.spawnsTeamOne = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L41">        this.spawnsTeamTwo = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L42">        this.teamOne = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L43">        this.teamTwo = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L44">        this.buildArena();</span>
+<span class="fc" id="L45">        this.setSpawns();</span>
+
+<span class="fc" id="L47">        Location redTargetLocation = this.location.clone().add(this.width - 5, 2, this.depth / 2);</span>
+<span class="fc" id="L48">        Location greenTargetLocation = this.location.clone().add(5, 2, this.depth / 2);</span>
+
+        // target owned by green team is on the green side of the arena and must be destroyed by red team and vica versa
+<span class="fc" id="L51">        this.targets = new Target[] {new Target(greenTargetLocation, &quot;green&quot;, 3, Material.RED_WOOL), new Target(redTargetLocation, &quot;red&quot;, 3, Material.GREEN_WOOL)};</span>
+
+<span class="fc" id="L53">        putResourceChests(redTargetLocation.clone().add(3, 0, 0), greenTargetLocation.clone().add(-3, 0, 0));</span>
+<span class="fc" id="L54">    }</span>
+
+    private void putResourceChests(Location chestLocOne, Location chestLocTwo) {
+    	/**
+    	 * Puts the resource chests on locations behind the target locations,
+    	 * but only if that space is available
+    	 */
+<span class="fc" id="L61">    	loc1 = chestLocOne;</span>
+<span class="fc" id="L62">        loc2 = chestLocTwo;</span>
+
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (loc1.getBlock().isEmpty()) {</span>
+<span class="fc" id="L65">        	this.resources[0] = new ResourceChest(loc1);</span>
+        }
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (loc2.getBlock().isEmpty()) {</span>
+<span class="fc" id="L68">        	this.resources[1] = new ResourceChest(loc2);</span>
+        }
+<span class="fc" id="L70">    }</span>
+
+    public void refillResources() {
+    	/**
+    	 * Place a new chest if one disappears and/or restock the chests
+    	 */
+<span class="fc bfc" id="L76" title="All 2 branches covered.">    	if (loc1.getBlock().isEmpty()) {</span>
+<span class="fc" id="L77">    		putResourceChests(loc1, loc2);</span>
+<span class="fc" id="L78">    		resources[1].restock();</span>
+<span class="fc" id="L79">    	}</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">    	else if (loc2.getBlock().isEmpty()) {</span>
+<span class="fc" id="L81">    		putResourceChests(loc1, loc2);</span>
+<span class="fc" id="L82">    		resources[0].restock();</span>
+<span class="fc" id="L83">    	}</span>
+    	else {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">    		for (ResourceChest chest : resources) {</span>
+<span class="fc" id="L86">    			chest.restock();</span>
+    		}
+    	}
+<span class="fc" id="L89">    }</span>
+    
+    public ResourceChest getChestOne() {
+<span class="fc" id="L92">    	return resources[0];</span>
+    }
+    
+    public ResourceChest getChestTwo() {
+<span class="fc" id="L96">    	return resources[1];</span>
+    }
+
+    //&lt;editor-fold desc=&quot;getters&quot;&gt;
+    public Location getLocation() {
+<span class="fc" id="L101">        return location;</span>
+    }
+
+    public int getWidth() {
+<span class="fc" id="L105">        return width;</span>
+    }
+
+    public int getDepth() {
+<span class="fc" id="L109">        return depth;</span>
+    }
+
+    public int getHeight() {
+<span class="fc" id="L113">        return height;</span>
+    }
+
+<span class="fc" id="L116">    public HashSet&lt;Player&gt; getTeamTwo() {return teamTwo; }</span>
+
+<span class="fc" id="L118">    public HashSet&lt;Player&gt; getTeamOne() {return teamOne; }</span>
+
+    public ArrayList&lt;Location&gt; getSpawnsTeamOne() {
+<span class="fc" id="L121">        return spawnsTeamOne;</span>
+    }
+
+    public ArrayList&lt;Location&gt; getSpawnsTeamTwo() {
+<span class="fc" id="L125">        return spawnsTeamTwo;</span>
+    }
+
+    private void setSpawns() {
+<span class="fc" id="L129">        int x1 = location.getBlockX();</span>
+<span class="fc" id="L130">        int y1 = location.getBlockY();</span>
+<span class="fc" id="L131">        int z1 = location.getBlockZ();</span>
+
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        for (int x = x1; x &lt; x1 + depth; x++) {</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">            for (int z = z1; z &lt; z1 + width; z++) {</span>
+<span class="fc bfc" id="L135" title="All 8 branches covered.">                if (x &gt; x1 &amp;&amp; x &lt; x1 + depth / 2 - 2 &amp;&amp; z &gt; z1 &amp;&amp; z &lt; z1 + width-1) {</span>
+<span class="fc" id="L136">                    spawnsTeamOne.add(thisWorld.getBlockAt(x, y1+2, z).getLocation());</span>
+<span class="fc bfc" id="L137" title="All 8 branches covered.">                } else if (x &gt;= x1 + depth / 2 + 2 &amp;&amp; x &lt; x1 + depth - 1 &amp;&amp; z &gt; z1 &amp;&amp; z &lt; z1 + width-1) {</span>
+<span class="fc" id="L138">                    spawnsTeamTwo.add(thisWorld.getBlockAt(x, y1+2, z).getLocation());</span>
+                }
+            }
+        }
+<span class="fc" id="L142">    }</span>
+
+    public Location getRandomAvailableLocation(ArrayList&lt;Location&gt; locations) {
+<span class="fc" id="L145">        Random random = new Random();</span>
+<span class="fc" id="L146">        Location trialLocation = locations.get(random.nextInt(locations.size()));</span>
+<span class="pc bpc" id="L147" title="1 of 4 branches missed.">        while (!(thisWorld.getBlockAt(trialLocation).isEmpty() &amp;&amp; trialLocation.getBlockY() &lt; location.getBlockY()+3)) {</span>
+<span class="fc" id="L148">            trialLocation = locations.get(random.nextInt(locations.size()));</span>
+        }
+<span class="fc" id="L150">        return trialLocation;</span>
+    }
+
+    public Target[] getTargets(){
+<span class="fc" id="L154">        return this.targets;</span>
+    }
+
+    //&lt;/editor-fold&gt;
+    private void buildArena() { // ugly
+<span class="fc" id="L159">        int x1 = location.getBlockX();</span>
+<span class="fc" id="L160">        int y1 = location.getBlockY();</span>
+<span class="fc" id="L161">        int z1 = location.getBlockZ();</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        for (int x = x1; x &lt; x1 + width; x++) {</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">            for (int y = y1 + 1; y &lt; y1 + height+1; y++) {</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">                for (int z = z1; z &lt; z1 + depth ; z++) {</span>
+                    // x depth, z width, y height
+<span class="fc" id="L166">                    Block currentBlock = thisWorld.getBlockAt(x, y, z);</span>
+<span class="pc bpc" id="L167" title="2 of 6 branches missed.">                    if ((y == y1 + 1 &amp;&amp; x &lt; x1 + width &amp;&amp; z &lt; z1 + depth) || // bottom</span>
+<span class="pc bpc" id="L168" title="1 of 6 branches missed.">                            (y &lt; y1 + height &amp;&amp; x &lt; x1 + width &amp;&amp; z == z1 ) || // left wall</span>
+<span class="pc bpc" id="L169" title="1 of 6 branches missed.">                            (y &lt; y1 + height &amp;&amp; x &lt; x1 +width &amp;&amp; z == z1 + depth - 1 ) || // right wall</span>
+<span class="pc bpc" id="L170" title="1 of 6 branches missed.">                            (y == y1 + 2 &amp;&amp; x == x1 +width/2 + 1 &amp;&amp; z &lt; z1 + depth) || // inner right barrier</span>
+<span class="pc bpc" id="L171" title="1 of 6 branches missed.">                            (y == y1 + 2 &amp;&amp; x == x1 +width/2 - 2 &amp;&amp; z &lt; z1 + depth) // inner left barrier</span>
+                    ) {
+<span class="fc" id="L173">                        currentBlock.setType(Material.BEDROCK);</span>
+<span class="fc" id="L174">                    }</span>
+<span class="pc bpc" id="L175" title="2 of 8 branches missed.">                    else if (y &gt; y1 + 1 &amp;&amp; y &lt; y1 + height &amp;&amp; x == x1 + width - 1 &amp;&amp; z &lt; z1 + depth - 1) { // team red wall</span>
+<span class="fc" id="L176">                        currentBlock.setType(Material.BEDROCK);</span>
+<span class="fc" id="L177">                    }</span>
+<span class="pc bpc" id="L178" title="2 of 8 branches missed.">                    else if (y &gt; y1 +1 &amp;&amp; y &lt; y1 + height &amp;&amp; x == x1 &amp;&amp; z &lt; z1 + depth - 1) { // team green wall</span>
+<span class="fc" id="L179">                        currentBlock.setType(Material.BEDROCK);</span>
+<span class="fc" id="L180">                    }</span>
+<span class="pc bpc" id="L181" title="1 of 8 branches missed.">                    else if (y == y1 + 2 &amp;&amp; (x == x1 +width/2 || x == x1 +width/2 - 1)&amp;&amp; z &lt; z1 + depth) {</span>
+<span class="fc" id="L182">                        currentBlock.setType(Material.LAVA);</span>
+<span class="fc" id="L183">                    }</span>
+
+                    else {
+<span class="fc" id="L186">                        currentBlock.setType(Material.AIR);</span>
+                    }
+                }
+            }
+        }
+<span class="fc" id="L191">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

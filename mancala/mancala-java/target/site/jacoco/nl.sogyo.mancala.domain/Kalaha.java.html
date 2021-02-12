@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Kalaha.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Mancala</a> &gt; <a href="index.source.html" class="el_package">nl.sogyo.mancala.domain</a> &gt; <span class="el_source">Kalaha.java</span></div><h1>Kalaha.java</h1><pre class="source lang-java linenums">package nl.sogyo.mancala.domain;
+
+public class Kalaha extends Bowl {
+    public Kalaha() {
+<span class="fc" id="L5">        this(new Player(), 0);</span>
+<span class="fc" id="L6">    }</span>
+    public Kalaha(Player player) {
+<span class="nc" id="L8">        this(player, 0);</span>
+<span class="nc" id="L9">    }</span>
+    public Kalaha(Player player, int i) {
+<span class="fc" id="L11">        super(player, i, 0);</span>
+<span class="fc" id="L12">    }</span>
+    @Override
+    public Boolean isKalaha(){
+<span class="fc" id="L15">        return true;</span>
+    }
+    @Override
+    public Object divideStones(Player player) throws InvalidMoveException {
+        //Throw error, player not allowed to start in kalaha
+<span class="fc" id="L20">        throw new InvalidMoveException(&quot;Not allowed to start in a Kalaha&quot;);</span>
+    }
+    @Override
+    protected Object divideStones(int amount, Player player){
+        //When distributing, players include their own kalaha but not the opponent's
+        //Continue with the next bowl if the kalaha does not belong to the player
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if(!player.equals(getOwner())) return this.getNextBowl().divideStones(amount, player);</span>
+
+        //Distribute one stone in the kalaha if calling player is the owner
+<span class="fc" id="L29">        this.addStones(1);</span>
+        //If amount is 1 return the method, this means that the move has run out of stones
+        //Returns the last bowl that was included in the move
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        if(amount == 1) return this;</span>
+
+<span class="fc" id="L34">        return this.getNextBowl().divideStones(amount -1, player);</span>
+    }
+    @Override
+    public Kalaha getOwnerKalaha(Player player) {
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if(this.getOwner().equals(player)) return this;</span>
+<span class="fc" id="L39">        else return this.getNextBowl().getOwnerKalaha(player);</span>
+    }
+    @Override
+    public Boolean pitsAreEmptyForOwner(Player player, Bowl startingBowl) {
+        //Kalaha implementation only calls own method on the next bowl if the startingBowl is not the same
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        if(this.equals(startingBowl)) return true;</span>
+<span class="fc" id="L45">        else return this.getNextBowl().pitsAreEmptyForOwner(player, startingBowl);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

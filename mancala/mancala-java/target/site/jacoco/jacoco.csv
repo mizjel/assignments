@@ -1,0 +1,9 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Mancala,nl.sogyo.mancala.domain,Foo,0,5,0,0,0,2,0,2,0,2
+Mancala,nl.sogyo.mancala.domain,GameState,0,15,0,0,0,1,0,1,0,1
+Mancala,nl.sogyo.mancala.domain,Bowl,6,238,1,13,0,57,1,28,0,22
+Mancala,nl.sogyo.mancala.domain,Player,0,148,2,4,0,53,2,21,0,20
+Mancala,nl.sogyo.mancala.domain,Pit,0,119,0,14,0,28,0,16,0,9
+Mancala,nl.sogyo.mancala.domain,InvalidMoveException,0,4,0,0,0,2,0,1,0,1
+Mancala,nl.sogyo.mancala.domain,Main,34,0,0,0,10,0,2,0,2,0
+Mancala,nl.sogyo.mancala.domain,Kalaha,8,70,1,7,2,14,2,10,1,7

@@ -1,0 +1,11 @@
+name: DefencePlugin
+version: 1.0-SNAPSHOT
+author: Team Octo
+main: minecraft.teamocto.DefensePlugin
+api-version: 1.16
+commands:
+  resetscore:
+  blocksleft:
+#    ping:
+#       description: returns pong
+#       usage: /ping

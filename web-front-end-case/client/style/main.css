@@ -1,0 +1,189 @@
+body {
+    font-family: 'Lato', sans-serif;
+    padding: 0px;
+    margin: 0px;
+    /* Set display: initial when a child(#header-block) has position: sticky */
+    display: initial;
+
+    --primary-color: #007936;
+    --accent-color: #eee;
+    --light-text-color: rgb(107, 107, 107);
+}
+#header-block{
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: white;
+}
+/* Describes the styling of the one and only element with id="mainheader", note the # in front of mainheader */
+#mainheader {
+    background-color: var(--primary-color);
+    font-size: 3rem;
+    color: white;
+}
+
+#logo-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#logo-header img {
+    margin-left: 30px;
+}
+
+main {
+    padding: 25px;
+}
+
+nav
+{
+    height: 2rem;
+    line-height: 2rem;
+    background-color: var(--accent-color);
+    text-align: center;
+}
+
+/* Describes the styling of all elements with class="parkname", note the . in front of parkname */
+.parkname {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Describes the styling of all <article> elements */
+article {
+    border: 1px solid var(--primary-color);
+    color: var(--light-text-color);
+    margin: 5px;
+}
+.order {
+    padding-top: 25px;
+}
+.orderbutton {
+    background-color: #007936;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    margin: 4px;
+    border: 2px solid black;
+    transition-duration: 0.4s;
+}
+.orderbutton:hover {
+    background-color: black;
+    color: white;
+}
+.orderbutton:disabled{
+    background-color: black;
+    color: black;
+}
+.hidden{
+    /* visibility hidden still takes up space on the page */
+    /* visibility: hidden; */
+    /* display none does not take up space while still being accessible by the DOM */
+    display: none;
+}
+.badge {
+    background-color: red;
+    display: inline;
+    color: white;
+    font-weight: bold;
+    width: 25px;
+    border-radius: 25px;
+}
+/* Change an anchor color based on whether it's been visited or not */
+a:link {
+    color:white;
+}
+/* Change an anchor color with a contrasting color on hover based on if it's been visited or not */
+a:link:hover {
+    color: black;
+}
+a:visited:hover {
+    color: yellow;
+}
+@media screen and (min-width: 781px){
+    #mainheader{
+        height: 80px;
+        font-size: 3rem;
+    }
+    nav{
+        height: 32px;
+    }
+    main{
+        width: 90%;
+    }
+    #header-block{
+        height: 240px;
+    }
+    article{
+        width: 30%;
+        float: left;
+        height: 380px;
+    }
+    .numberofkids{
+        display: flex;
+    }
+    label{
+        display: flex;
+    }
+    #logo-header{
+        height: 200px;
+    }
+    #header-block{
+        height: 310px;
+    }
+}
+
+@media screen and (min-width: 481px) and (max-width: 780px){
+    #mainheader{
+        height: 60px;
+        font-size: 2rem;
+    }
+    nav{
+        height: 32px;
+    }
+    main{
+        width: 100%;
+    }
+    article{
+        width: 45%;
+        float: left;
+        height: 355px;
+        display: grid;
+    }
+    .numberofkids{
+        display: flex;
+    }
+    label{
+        display: flex;
+    }
+    #logo-header{
+        height: 200px;
+    }
+    #header-block{
+        height: 290px;
+    }
+}
+@media screen and (max-width: 480px) {
+    #mainheader{
+        height: 45px;
+        font-size: 1.5rem;
+    }
+    #logo-header{
+        display: none;
+    }
+    #header-block{
+        height: 90px;
+    }
+    nav{
+        height: 32px;
+    }
+    main{
+        width: 100%;
+        padding: 0;
+    }
+}
+

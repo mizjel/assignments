@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Mancala</a> &gt; <a href="index.source.html" class="el_package">nl.sogyo.mancala.domain</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package nl.sogyo.mancala.domain;
+
+
+<span class="nc" id="L4">public class Main {</span>
+    //Used this class for debugging..
+    public static void main(String... args){
+<span class="nc" id="L7">        Player playerOne = new Player(&quot;Player one&quot;);</span>
+
+        //Bowl playerOneBowl = new Pit(playerOne);
+        //Bowl playerOneBowl = BowlFactory.create(playerOne, 6);
+        // playerOneBowl.createBowls();
+
+        // Kalaha playerOneKalaha = playerOneBowl.getOwnerKalaha(playerOne);
+        // playerOne.makeMove(playerOneKalaha);
+<span class="nc" id="L15">        Player playerTwo = new Player(&quot;Player two&quot;);</span>
+
+<span class="nc" id="L17">        Player.setOpponents(playerOne, playerTwo);</span>
+<span class="nc" id="L18">        Player.setTurnForPlayers(playerOne, playerTwo);</span>
+        //Bowl bowl = new Pit(playerOne);
+        // Bowl bowls = BowlFactory.create(playerOne, playerTwo, 6);
+<span class="nc" id="L21">        Bowl connectedBowls = new Pit(playerOne, playerTwo);</span>
+
+        //playerOne.switchPlayer();
+<span class="nc" id="L24">        playerTwo.switchPlayer();</span>
+        // Kalaha playerOneKalaha = bowls.getOwnerKalaha(playerOne);
+        // playerOne.makeMove(playerOneKalaha);
+
+        // Bowl playerTwoFirstPit = bowls.getBowlForOwner(0, playerTwo);
+        // playerOne.makeMove(playerTwoFirstPit);
+
+        // Bowl playerTwoBowl = new Pit(playerTwo);
+        // playerTwoBowl.createBowls();
+
+        // Player.setOpponents(playerOne, playerTwo);
+        // Player.setTurnForPlayers(playerOne, playerTwo);
+
+        // Bowl allBowls = Bowl.ToConnectedBowl(playerOneBowl, playerTwoBowl);
+        // allBowls.getBowlForOwner(4, playerOne).setStones(0);
+        // Bowl takeOpposite = allBowls.getBowlForOwner(0, playerOne);
+        // Bowl endingBowl = allBowls.getBowlForOwner(4, playerOne);
+        // Bowl oppositeBowl = endingBowl.getOppositeBowl();
+        // oppositeBowl.setStones(8);
+
+        // playerOne.makeMove(takeOpposite);
+
+        // Kalaha playerOneKalaha = allBowls.getOwnerKalaha(playerOne);
+<span class="nc" id="L47">        System.out.println(&quot;mancala-java is running, you just can't do anything with it at the moment&quot;);</span>
+<span class="nc" id="L48">        System.console().readLine();</span>
+<span class="nc" id="L49">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

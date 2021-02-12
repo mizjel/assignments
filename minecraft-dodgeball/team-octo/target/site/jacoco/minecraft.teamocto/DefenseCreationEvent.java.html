@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefenseCreationEvent.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.team-octo</a> &gt; <a href="index.source.html" class="el_package">minecraft.teamocto</a> &gt; <span class="el_source">DefenseCreationEvent.java</span></div><h1>DefenseCreationEvent.java</h1><pre class="source lang-java linenums">package minecraft.teamocto;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerInteractEvent;
+//import minecraft.squidsquad;
+
+public class DefenseCreationEvent extends Event implements Cancellable, DefenseCreationEventInterface {
+
+	private boolean isCancelled;
+	private Location location;
+	private Material toolMaterial;
+	private PlayerInteractEvent initiationEvent;
+<span class="nc" id="L18">	private static final HandlerList HANDLERS = new HandlerList();</span>
+
+<span class="nc" id="L20">	public DefenseCreationEvent(PlayerInteractEvent event) {</span>
+<span class="nc" id="L21">		initiationEvent = event;</span>
+<span class="nc" id="L22">		toolMaterial = event.getPlayer().getInventory().getItemInMainHand().getType();</span>
+<span class="nc" id="L23">		location = event.getClickedBlock().getRelative(BlockFace.UP).getLocation();</span>
+<span class="nc" id="L24">		isCancelled = false;</span>
+<span class="nc" id="L25">	}</span>
+
+	public DefenseCreationEvent(boolean isAsync) {
+<span class="nc" id="L28">		super(isAsync);</span>
+<span class="nc" id="L29">	}</span>
+
+    @Override
+	public boolean isCancelled() {
+<span class="nc" id="L33">        return this.isCancelled;</span>
+    }
+
+    @Override
+	public void setCancelled(boolean isCancelled) {
+<span class="nc" id="L38">        this.isCancelled = isCancelled;</span>
+<span class="nc" id="L39">    }</span>
+
+	@Override
+	public HandlerList getHandlers() {
+<span class="nc" id="L43">		return HANDLERS;</span>
+	}
+
+	public static HandlerList getHandlerList() {
+<span class="nc" id="L47">        return HANDLERS;</span>
+    }
+
+	@Override
+	public Material getMaterialOfTool() {
+		/**
+		 * Material.WOODEN_PICKAXE corresponds to a wall
+		 * Material.GOLDEN_PICKAXE corresponds to a shield
+		 */
+<span class="nc" id="L56">		return toolMaterial;</span>
+	}
+
+	@Override
+	public Location getLocation() {
+<span class="nc" id="L61">		return location;</span>
+	}
+
+	@Override
+	public String getMessage() {
+<span class="nc" id="L66">		return &quot;Building a defense-object!&quot;;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

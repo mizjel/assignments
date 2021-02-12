@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResourceChest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.arena</a> &gt; <a href="index.source.html" class="el_package">minecraft.arena</a> &gt; <span class="el_source">ResourceChest.java</span></div><h1>ResourceChest.java</h1><pre class="source lang-java linenums">package minecraft.arena;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+public class ResourceChest {
+	private Location pileLocation;
+	private Block pileBlock;
+	private Chest pileChest;
+<span class="fc" id="L18">	private final int MAX_ITEMS = 216; // The maximum amount of items, equal to the chest size of 27 * 8</span>
+<span class="fc" id="L19">	private final double armourChance = 0.2; // The chance to respawn an armour-item</span>
+
+<span class="fc" id="L21">	private final ArrayList&lt;Material&gt; MATERIALS = new ArrayList&lt;&gt;(Arrays.asList(</span>
+<span class="fc" id="L22">					Material.GLASS_PANE,</span>
+<span class="fc" id="L23">					Material.GLASS_PANE,</span>
+<span class="fc" id="L24">					Material.IRON_BLOCK,</span>
+<span class="fc" id="L25">					Material.IRON_BLOCK,</span>
+<span class="fc" id="L26">					Material.ARROW,</span>
+<span class="fc" id="L27">					Material.ARROW,</span>
+<span class="fc" id="L28">					Material.ARROW,</span>
+<span class="fc" id="L29">					Material.SPECTRAL_ARROW));</span>
+<span class="fc" id="L30">	private final ArrayList&lt;Material&gt; ARMOURS = new ArrayList&lt;&gt;(Arrays.asList(</span>
+<span class="fc" id="L31">					Material.DIAMOND_CHESTPLATE,</span>
+<span class="fc" id="L32">					Material.DIAMOND_BOOTS));</span>
+	
+<span class="fc" id="L34">	public ResourceChest(Location location) {</span>
+		/**
+		 * Places a chest of resources on the given location
+		 */
+<span class="fc" id="L38">		pileLocation = location;</span>
+<span class="fc" id="L39">		pileBlock = pileLocation.getBlock();</span>
+<span class="fc" id="L40">		pileBlock.setType(Material.CHEST);</span>
+<span class="fc" id="L41">		pileChest = (Chest) pileBlock.getState();</span>
+<span class="fc" id="L42">		pileChest.getInventory().clear();</span>
+		
+<span class="fc bfc" id="L44" title="All 2 branches covered.">		for (Material armour : ARMOURS) {</span>
+<span class="fc" id="L45">			pileChest.getInventory().addItem(new ItemStack(armour, 1));</span>
+		}
+		
+<span class="fc" id="L48">		randomFillChest(MAX_ITEMS - ARMOURS.size());</span>
+<span class="fc" id="L49">	}</span>
+
+	private void randomFillChest(int amountToBeAdded) {
+		/** 
+		 * Fills the chest with random materials from the list
+		 * up to the input amount
+		 */
+<span class="fc bfc" id="L56" title="All 2 branches covered.">		for (int i = 0; i &lt; amountToBeAdded; i++) {</span>
+<span class="fc" id="L57">			int materialIndex = new Random().nextInt(MATERIALS.size());</span>
+<span class="fc" id="L58">			Material addedItemType = MATERIALS.get(materialIndex);</span>
+			
+<span class="fc" id="L60">			ItemStack itemStack = new ItemStack(addedItemType, 1);</span>
+<span class="fc" id="L61">			pileChest.getInventory().addItem(itemStack);</span>
+		}
+<span class="fc" id="L63">	}</span>
+	
+	public Chest getChest() {
+<span class="fc" id="L66">		return pileChest;</span>
+	}
+	
+	public Inventory getInventory() {
+<span class="fc" id="L70">		return pileChest.getInventory();</span>
+	}
+
+	public void restock() {
+		/**
+		 * Add diamond-armour if it is missing with a chance armourChance
+		 * and refill the chest based on the free space in it
+		 */
+		
+<span class="fc bfc" id="L79" title="All 2 branches covered.">		for (Material armour : ARMOURS) {</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">			if (!pileChest.getInventory().contains(armour)) {</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">				if (new Random().nextDouble() &lt; armourChance) {</span>
+<span class="fc" id="L82">					pileChest.getInventory().addItem(new ItemStack(armour, 1));</span>
+				}
+			}
+		}
+		
+<span class="fc" id="L87">		int availableSpace = MAX_ITEMS;</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">		for (ItemStack eachStack : pileChest.getInventory()) {</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">			if (eachStack != null) {</span>
+<span class="fc" id="L90">				availableSpace = availableSpace - eachStack.getAmount();</span>
+			}
+		}
+		
+<span class="fc bfc" id="L94" title="All 2 branches covered.">		if (availableSpace &gt; 0) {</span>
+<span class="fc" id="L95">			randomFillChest(availableSpace);</span>
+		}
+<span class="fc" id="L97">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

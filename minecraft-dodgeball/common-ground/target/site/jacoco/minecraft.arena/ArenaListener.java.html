@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArenaListener.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.arena</a> &gt; <a href="index.source.html" class="el_package">minecraft.arena</a> &gt; <span class="el_source">ArenaListener.java</span></div><h1>ArenaListener.java</h1><pre class="source lang-java linenums">package minecraft.arena;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import java.util.ArrayList;
+
+public class ArenaListener implements Listener {
+
+    private final MyPlugin plugin;
+
+<span class="fc" id="L15">    public ArenaListener(MyPlugin plugin) {</span>
+<span class="fc" id="L16">        this.plugin = plugin;</span>
+<span class="fc" id="L17">    }</span>
+
+    @EventHandler
+    public void onPlayerDeath(PlayerRespawnEvent respawnEvent) {
+<span class="nc" id="L21">        Player toBeRespawned = respawnEvent.getPlayer();</span>
+        ArrayList&lt;Location&gt; candidateSpawns;
+<span class="nc bnc" id="L23" title="All 2 branches missed.">        if (plugin.getCurrentArena() != null) {</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">            if (plugin.getCurrentArena().getTeamOne().contains(toBeRespawned)) {</span>
+<span class="nc" id="L25">                candidateSpawns = plugin.getCurrentArena().getSpawnsTeamOne();</span>
+<span class="nc" id="L26">                respawnEvent.setRespawnLocation(plugin.getCurrentArena()</span>
+<span class="nc" id="L27">                        .getRandomAvailableLocation(candidateSpawns));</span>
+
+<span class="nc" id="L29">            }</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">            else if (plugin.getCurrentArena().getTeamTwo().contains(toBeRespawned)) {</span>
+<span class="nc" id="L31">                candidateSpawns = plugin.getCurrentArena().getSpawnsTeamTwo();</span>
+<span class="nc" id="L32">                respawnEvent.setRespawnLocation(plugin.getCurrentArena()</span>
+<span class="nc" id="L33">                        .getRandomAvailableLocation(candidateSpawns));</span>
+            }
+        }
+<span class="nc" id="L36">    }</span>
+
+//    @EventHandler
+//    public void onPlayerOutOfBounds(PlayerMoveEvent playerMove) {
+//        Player toBeTeleported = playerMove.getPlayer();
+//        ArrayList&lt;Location&gt; candidateSpawns;
+//        if (!(plugin.getCurrentArena() == null)) {
+//            // check whether player in arena
+//            if (plugin.getCurrentArena().getTeamOne().contains(toBeTeleported)) {
+//                candidateSpawns = plugin.getCurrentArena().getSpawnsTeamOne();
+//                toBeTeleported.teleport(plugin.getCurrentArena()
+//                        .getRandomAvailableLocation(candidateSpawns));
+//
+//            }
+//            else if (plugin.getCurrentArena().getTeamTwo().contains(toBeTeleported)) {
+//                candidateSpawns = plugin.getCurrentArena().getSpawnsTeamTwo();
+//                toBeTeleported.teleport(plugin.getCurrentArena()
+//                        .getRandomAvailableLocation(candidateSpawns));
+//            }
+//        }
+//    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

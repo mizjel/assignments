@@ -1,0 +1,11 @@
+minecraft\arena\ResourceChest.class
+nl\sogyo\template\MyCommandExecutor.class
+minecraft\arena\Target.class
+minecraft\arena\ArenaListener.class
+minecraft\arena\ArenaCreateCommand.class
+minecraft\arena\MyPlugin$1.class
+nl\sogyo\template\MyPlugin.class
+minecraft\arena\MyPlugin.class
+nl\sogyo\template\MyPluginListener.class
+minecraft\arena\Arena.class
+minecraft\arena\ArenaJoinCommand.class

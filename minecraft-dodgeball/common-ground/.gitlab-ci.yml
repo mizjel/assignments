@@ -1,0 +1,63 @@
+image: maven:3.6.3-jdk-8
+
+stages:
+  - build
+  - test
+  - package
+  - deploy
+
+attempt-build:
+  stage: build
+  script:
+      - mvn clean compile | tee compileStepOutput.txt
+      - cat compileStepOutput.txt | grep -i warning| tee compilerWarnings.txt
+      - if [ $(cat compileStepOutput.txt | grep -i warning | wc -l) -gt 4 ]; then echo -e "\033[0;31m[ERROR]\033[0m Too many compiler warnings!"; false; fi
+  artifacts:
+    expire_in: never
+    paths:
+      - compilerWarnings.txt
+
+coverage-test:
+  stage: test
+  script:
+    - mvn test
+    - mvn jacoco:report
+    - "awk -F \",\" '{ instructions += $4 + $5; covered += $5 } END { print covered, \"/\", instructions, \"instructions covered\"; print \"Instructions covered: \"100*covered/instructions, \"%\" }' target/site/jacoco/jacoco.csv"
+  coverage: "/Instructions covered:\\s\\d+\\.*\\d*\\s%/"
+  artifacts:
+    expire_in: never
+    paths:
+      - target/jacoco.exec
+      - target/site/jacoco/
+      - target/surefire-reports/
+    reports:
+      junit:
+        - target/surefire-reports/TEST-*.xml
+
+package-client:
+  stage: package
+  script:
+    - mvn clean package | tee packageStepOutput.txt
+    - cat packageStepOutput.txt | grep -i warning| tee packageWarnings.txt
+    - if [ $(cat packageStepOutput.txt | grep -i warning | wc -l) -gt 4 ]; then echo -e "\033[0;31m[ERROR]\033[0m Too many packaging warnings!"; false; fi
+  artifacts:
+    expire_in: never
+    paths:
+      - packageWarnings.txt
+      - target/*.jar
+
+deploy-client:
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY_SERVER" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 700 ~/.ssh
+  stage: deploy
+  script:
+    - mvn clean install
+    - scp target/*.jar santa@kerstproject-server-01:/var/MineCraftPlugins/
+    - ssh santa@10.10.4.233 -T "touch /var/MineCraftPlugins/*.jar"
+  only:
+    - master

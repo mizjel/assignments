@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MyCommandExecutor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.arena</a> &gt; <a href="index.source.html" class="el_package">nl.sogyo.template</a> &gt; <span class="el_source">MyCommandExecutor.java</span></div><h1>MyCommandExecutor.java</h1><pre class="source lang-java linenums">package nl.sogyo.template;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+
+public class MyCommandExecutor implements CommandExecutor {
+    private final MyPlugin plugin;
+
+<span class="nc" id="L10">    public MyCommandExecutor(MyPlugin plugin) {</span>
+<span class="nc" id="L11">        this.plugin = plugin;</span>
+<span class="nc" id="L12">    }</span>
+    /**
+     * Executes the given command, returning its success
+     *
+     * @param sender  Source of the command
+     * @param command Command which was executed
+     * @param label   Alias of the command which was used
+     * @param args    Passed command arguments
+     * @return true if a valid command, otherwise false
+     */
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+<span class="nc" id="L24">        String commandName = command.getName();</span>
+
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        switch (commandName.toLowerCase()) {</span>
+            case &quot;ping&quot;:
+<span class="nc" id="L28">                handlePing(sender, command, label, args);</span>
+<span class="nc" id="L29">                break;</span>
+            default:
+<span class="nc" id="L31">                return false;</span>
+        }
+<span class="nc" id="L33">        return true;</span>
+    }
+
+    private boolean handlePing(CommandSender sender, Command command, String label, String[] args) {
+<span class="nc" id="L37">        sender.sendMessage(&quot;Pong!&quot;);</span>
+<span class="nc" id="L38">        return true;</span>
+    };
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

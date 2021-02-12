@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: minecraft.arena.ResourcePileTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.585 s - in minecraft.arena.ResourcePileTest

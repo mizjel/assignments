@@ -1,0 +1,15 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+minecraft.plugin.team-octo,minecraft.teamocto.doelwitlistener,DoelwitScore,50,36,8,0,16,13,7,6,3,6
+minecraft.plugin.team-octo,minecraft.teamocto.doelwitlistener,BlocksLeft,45,6,2,0,8,3,2,1,1,1
+minecraft.plugin.team-octo,minecraft.teamocto.doelwitlistener,ResetScore,20,6,2,0,6,3,2,1,1,1
+minecraft.plugin.team-octo,minecraft.teamocto.doelwitlistener,DoelwitListener,108,6,10,0,17,3,7,1,2,1
+minecraft.plugin.team-octo,minecraft.teamocto.builders,WallBuilder,6,5,0,0,2,2,1,1,1,1
+minecraft.plugin.team-octo,minecraft.teamocto.builders,Builder,53,9,12,0,12,4,8,1,2,1
+minecraft.plugin.team-octo,minecraft.teamocto.builders,ShieldBuilder,8,8,0,0,2,3,1,1,1,1
+minecraft.plugin.team-octo,minecraft.teamocto.models,ShieldModel,78,17,12,0,12,6,12,2,6,2
+minecraft.plugin.team-octo,minecraft.teamocto.noblockdrop,NoBlockDrop,56,6,18,0,9,3,11,1,2,1
+minecraft.plugin.team-octo,minecraft.teamocto.muurbouwen,Wall,198,42,33,7,45,14,22,3,3,2
+minecraft.plugin.team-octo,minecraft.teamocto,Shield,221,53,26,2,48,15,18,4,4,4
+minecraft.plugin.team-octo,minecraft.teamocto,DefensePlugin,3,148,0,0,2,33,1,4,1,4
+minecraft.plugin.team-octo,minecraft.teamocto,DefenseCreationEvent,51,0,0,0,17,0,10,0,10,0
+minecraft.plugin.team-octo,minecraft.teamocto,PlayerHandler,7,97,0,0,3,23,1,5,1,5

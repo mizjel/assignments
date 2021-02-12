@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlayerHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.team-octo</a> &gt; <a href="index.source.html" class="el_package">minecraft.teamocto</a> &gt; <span class="el_source">PlayerHandler.java</span></div><h1>PlayerHandler.java</h1><pre class="source lang-java linenums">package minecraft.teamocto;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.enchantments.Enchantment;
+
+<span class="fc" id="L13">class PlayerHandler implements Listener {</span>
+  @EventHandler
+  public void onPlayerJoin(PlayerJoinEvent event) {
+<span class="fc" id="L16">    Player player = event.getPlayer();</span>
+
+<span class="fc" id="L18">    giveInitialItems(player);</span>
+<span class="fc" id="L19">  }</span>
+
+  @EventHandler
+  public void onPlayerRespawn(PlayerRespawnEvent event) {
+<span class="nc" id="L23">      Player player = event.getPlayer();</span>
+<span class="nc" id="L24">      giveInitialItems(player);</span>
+<span class="nc" id="L25">  }</span>
+
+  public void giveInitialItems(Player player){
+      // for wall
+<span class="fc" id="L29">      ItemStack wooden = new ItemStack(Material.WOODEN_PICKAXE, 1);</span>
+<span class="fc" id="L30">      makeUnbreakable(wooden);</span>
+      // for shield
+<span class="fc" id="L32">      ItemStack golden = new ItemStack(Material.GOLDEN_PICKAXE, 1);</span>
+<span class="fc" id="L33">      makeUnbreakable(golden);</span>
+      // for AA
+<span class="fc" id="L35">      ItemStack diamond = new ItemStack(Material.DIAMOND_PICKAXE, 1);</span>
+<span class="fc" id="L36">      makeUnbreakable(diamond);</span>
+      // to DESTROY!
+<span class="fc" id="L38">      ItemStack bow = new ItemStack(Material.BOW, 1);</span>
+<span class="fc" id="L39">      makeUnbreakable(bow);</span>
+<span class="fc" id="L40">      addEnchantmentToBow(bow);</span>
+
+<span class="fc" id="L42">      player.getInventory().addItem(wooden, golden, diamond, bow);</span>
+<span class="fc" id="L43">  }</span>
+
+  public void makeUnbreakable(ItemStack item) {
+<span class="fc" id="L46">      ItemMeta item_meta = item.getItemMeta();</span>
+<span class="fc" id="L47">      item_meta.setUnbreakable(true);</span>
+<span class="fc" id="L48">      item.setItemMeta(item_meta);</span>
+<span class="fc" id="L49">  }</span>
+
+  public void addEnchantmentToBow(ItemStack bow) {
+<span class="fc" id="L52">      ItemMeta bow_meta = bow.getItemMeta(); //</span>
+<span class="fc" id="L53">      bow_meta.addEnchant(Enchantment.ARROW_DAMAGE, 5, true);</span>
+<span class="fc" id="L54">      bow.setItemMeta(bow_meta);</span>
+<span class="fc" id="L55">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

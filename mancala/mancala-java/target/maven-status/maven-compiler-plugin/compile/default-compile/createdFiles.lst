@@ -1,0 +1,9 @@
+nl\sogyo\mancala\domain\GameState.class
+nl\sogyo\mancala\domain\Bowl.class
+nl\sogyo\mancala\domain\Pit.class
+nl\sogyo\mancala\domain\InvalidMoveException.class
+nl\sogyo\mancala\domain\SwitchPlayerEventListener.class
+nl\sogyo\mancala\domain\Foo.class
+nl\sogyo\mancala\domain\Main.class
+nl\sogyo\mancala\domain\Kalaha.class
+nl\sogyo\mancala\domain\Player.class

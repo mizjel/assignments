@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NoBlockDrop.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.team-octo</a> &gt; <a href="index.source.html" class="el_package">minecraft.teamocto.noblockdrop</a> &gt; <span class="el_source">NoBlockDrop.java</span></div><h1>NoBlockDrop.java</h1><pre class="source lang-java linenums">package minecraft.teamocto.noblockdrop;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+
+import minecraft.teamocto.DefensePlugin;
+
+public class NoBlockDrop  implements Listener {
+	
+	 private final DefensePlugin plugin;
+
+<span class="fc" id="L17">	    public NoBlockDrop(DefensePlugin myPlugin) {</span>
+<span class="fc" id="L18">	        this.plugin = myPlugin;</span>
+<span class="fc" id="L19">	    }</span>
+	    
+	    @EventHandler
+	    public void onBreak(BlockBreakEvent event) {
+	    	
+<span class="nc bnc" id="L24" title="All 4 branches missed.">	    	if (event.getBlock().getType() == Material.GREEN_WOOL ||event.getBlock().getType() == Material.RED_WOOL ||</span>
+<span class="nc bnc" id="L25" title="All 4 branches missed.">	    			event.getBlock().getType() == Material.IRON_BLOCK || event.getBlock().getType() == Material.GLASS_PANE ) {</span>
+<span class="nc" id="L26">	    		event.setDropItems(false);</span>
+	    	}
+	    	
+<span class="nc" id="L29">	    	}</span>
+	    
+	    @EventHandler
+	    public void onExplodeBlock(EntityExplodeEvent event) {
+	    	//Bukkit.broadcastMessage(&quot;explosie event (NoBlockDrop listener)&quot;);
+<span class="nc bnc" id="L34" title="All 2 branches missed.">	    	for(Block b : event.blockList()){</span>
+<span class="nc bnc" id="L35" title="All 4 branches missed.">	    		if (b.getType() == Material.GREEN_WOOL ||b.getType() == Material.RED_WOOL ||</span>
+<span class="nc bnc" id="L36" title="All 4 branches missed.">	    				b.getType() == Material.IRON_BLOCK || b.getType() == Material.GLASS_PANE ) {</span>
+	    			//Bukkit.broadcastMessage(&quot;Material is in the list (NoBlockDrop listener)&quot;);
+<span class="nc" id="L38">	    			event.setYield(0);</span>
+	    			}
+	    		}
+<span class="nc" id="L41">	    	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

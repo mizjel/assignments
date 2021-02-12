@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Shield.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">minecraft.plugin.team-octo</a> &gt; <a href="index.source.html" class="el_package">minecraft.teamocto</a> &gt; <span class="el_source">Shield.java</span></div><h1>Shield.java</h1><pre class="source lang-java linenums">package minecraft.teamocto;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
+
+import minecraft.teamocto.models.ShieldModel;
+
+public class Shield implements Listener {
+	
+<span class="fc" id="L25">	private final Material MATERIAL = Material.GLASS_PANE;</span>
+	private int SIZE;
+	private Location location;
+	private Block mainBlock;
+	private BlockFace shieldNormal;
+	private Inventory playersStuff;
+	private List&lt;ShieldModel&gt; builtShields;
+
+<span class="fc" id="L33">	public Shield() {</span>
+<span class="fc" id="L34">		builtShields = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L35">	}</span>
+	public void buildShield(PlayerInteractEvent myEvent, int size){
+<span class="fc" id="L37">		mainBlock = myEvent.getClickedBlock();</span>
+<span class="fc" id="L38">		SIZE = size;</span>
+<span class="fc" id="L39">		shieldNormal = myEvent.getPlayer().getFacing();</span>
+<span class="fc" id="L40">		this.location = mainBlock.getLocation();</span>
+<span class="fc" id="L41">		playersStuff = myEvent.getPlayer().getInventory();</span>
+		
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">		if (SIZE &gt; 1) {</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">			if (playersStuff.contains(MATERIAL, SIZE * SIZE)) {</span>
+<span class="nc" id="L45">				createShieldBlocks(myEvent.getPlayer());</span>
+<span class="nc" id="L46">			}</span>
+			else {
+<span class="nc" id="L48">				myEvent.getPlayer().sendMessage(&quot;Not enough glass pane to build a wall, &quot; +</span>
+<span class="nc" id="L49">						SIZE * SIZE + &quot; are needed!&quot;);</span>
+<span class="nc" id="L50">				myEvent.setCancelled(true);</span>
+			}
+<span class="nc" id="L52">		}</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">		else if (SIZE == 1) {</span>
+<span class="fc" id="L54">			mainBlock.setType(MATERIAL);</span>
+		}
+
+
+<span class="fc" id="L58">	}</span>
+	private void createShieldBlocks(Player player) {
+		// Put the shield perpendicular to facing direction of player
+<span class="nc" id="L61">		Vector shieldSide = shieldNormal.getDirection().rotateAroundY(Math.PI/2);</span>
+<span class="nc" id="L62">		ShieldModel builtShield = new ShieldModel(player);</span>
+
+<span class="nc bnc" id="L64" title="All 2 branches missed.">		for (int y = 1; y &lt;= SIZE; y++) {</span>
+<span class="nc" id="L65">			Location nextTopBlockLoc = location.clone().add(new Vector(0,y,0));</span>
+<span class="nc" id="L66">			Location nextTopBlockLocClone = nextTopBlockLoc.clone();</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">			for (int x = 0; x &lt;= SIZE/2; x++) {</span>
+<span class="nc" id="L68">				Location nextSideBlockLoc = nextTopBlockLoc.add(shieldSide.clone().multiply(x));</span>
+<span class="nc" id="L69">				changeBlock(nextSideBlockLoc, builtShield);</span>
+			}
+<span class="nc bnc" id="L71" title="All 2 branches missed.">			for (int x = 0; x &lt;= (SIZE - 1)/2; x++) {</span>
+<span class="nc" id="L72">				Location nextSideBlockLoc = nextTopBlockLocClone.subtract(shieldSide.clone().multiply(x));</span>
+<span class="nc" id="L73">				changeBlock(nextSideBlockLoc, builtShield);</span>
+			}
+		}
+<span class="nc" id="L76">		builtShields.add(builtShield);</span>
+<span class="nc" id="L77">	}</span>
+	
+	private void changeBlock(Location location, ShieldModel shield) {
+<span class="nc" id="L80">		Block thisBlock = location.getBlock();</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">		if (thisBlock.getType() == Material.AIR) {</span>
+<span class="nc" id="L82">			removeItem();</span>
+<span class="nc" id="L83">			thisBlock.setType(MATERIAL);</span>
+<span class="nc" id="L84">			shield.addBlockLocation(location.clone());</span>
+			// TODO remove resource
+		}
+<span class="nc" id="L87">	}</span>
+	
+	public void removeItem() {
+		/**
+		 * Loop over the itemstacks in the player's inventory,
+		 * find the correct material and remove one.
+		 * If there is only one left, the slot will be emptied
+		 */
+<span class="nc" id="L95">        int size = playersStuff.getSize();</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        for (int slot = 0; slot &lt; size; slot++) {</span>
+<span class="nc" id="L97">            ItemStack slotIS = playersStuff.getItem(slot);</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (slotIS.getType() == MATERIAL) {</span>
+<span class="nc" id="L99">            	int amount = slotIS.getAmount();</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">            	if (amount == 1) {</span>
+<span class="nc" id="L101">            		playersStuff.clear(slot);</span>
+<span class="nc" id="L102">            	}</span>
+            	else {
+<span class="nc" id="L104">            		slotIS.setAmount(amount - 1);</span>
+            	}
+<span class="nc" id="L106">            	break;</span>
+            }
+        }
+<span class="nc" id="L109">    }</span>
+
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event){
+<span class="nc" id="L113">		Location breakLocation = event.getBlock().getLocation();</span>
+<span class="nc" id="L114">		ShieldModel foundShield = null;</span>
+
+<span class="nc bnc" id="L116" title="All 2 branches missed.">		for(ShieldModel shield : builtShields){</span>
+<span class="nc bnc" id="L117" title="All 4 branches missed.">			if(shield.getOwner() == event.getPlayer() &amp;&amp; Boolean.TRUE.equals(shield.hasLocation(breakLocation))) {</span>
+<span class="nc" id="L118">				event.setCancelled(true);</span>
+<span class="nc" id="L119">				foundShield = shield;</span>
+<span class="nc" id="L120">				break;</span>
+			}	
+		}
+<span class="nc bnc" id="L123" title="All 2 branches missed.">		if(foundShield != null) {</span>
+<span class="nc" id="L124">			foundShield.breakShield();</span>
+<span class="nc" id="L125">			builtShields.remove(foundShield);</span>
+		}
+<span class="nc" id="L127">	}</span>
+
+	public Material getType() {
+<span class="fc" id="L130">		return MATERIAL;</span>
+	}
+	
+	public Location getLocation() {
+<span class="fc" id="L134">		return location;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
